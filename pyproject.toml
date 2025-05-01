@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = "roughsurf2stl"
+version = "1.0.0"
+description = "Generates STL files of rough surfaces for use in 3D printing"
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+authors = [{ name = "Wyatt Gronnemose" }]
+dependencies = ["scipy"]
