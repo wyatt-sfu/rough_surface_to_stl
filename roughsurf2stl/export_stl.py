@@ -38,7 +38,6 @@ def export_stl(triangles: np.ndarray, normals: np.ndarray, out_name: str):
             # Write the triangle to the file
             stl_file.write(
                 tri_struct.pack(
-                    TRIANGLE_FORMAT,
                     normals[i, 0],
                     normals[i, 1],
                     normals[i, 2],
