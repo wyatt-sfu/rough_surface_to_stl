@@ -22,3 +22,7 @@ surf = gaussian_correlated_surface(nx, ny, dx, corr_len_x, corr_len_y, height_rm
 triangles, normals = triangulate_surface(nx, ny, dx, surf)
 export_stl(triangles, normals, "example.stl")
 ```
+
+This produces an STL file which looks like:
+![Example STL file rendering](example.png)
+
