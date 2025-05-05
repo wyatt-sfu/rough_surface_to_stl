@@ -3,12 +3,30 @@ import scipy.spatial
 import tqdm
 
 
-def triangulate_surface(nx, ny, dx, surf_height) -> tuple[np.ndarray, np.ndarray]:
-    """Takes an array of points defining a surface and exports it as an STL file.
+def triangulate_surface(
+    nx: int, ny: int, dx: float, surf_height: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Takes an array of points defining the surface height and exports it as
+    an STL file.
+
+    Args:
+        nx (int): Number of sample points in X direction
+        ny (int): Number of sample points in Y direction
+        dx (float): Distance between samples (assumed square pixels)
+        surf_height (np.ndarray): Numpy array of surface height with shape (ny, nx)
 
     Returns:
         tuple[np.ndarray, np.ndarray]: Tuple of numpy arrays containing
-            (triangles, normals).
+            (triangles, normals). The shape of the triangles array is
+            (ntriangles, 3, 3). Each triangle is defined by a 3x3 matrix in
+            which each row is a vector containing the vertex position, ie
+                            | V1_x, V1_y, V1_z |
+                            | V2_x, V2_y, V2_z |
+                            | V3_x, V3_y, V3_z |
+            The normals vector has shape (ntriangles, 3) and contains an outward
+            facing unit normal vector for each triangle. The last dimension is
+            ordered [n_x, n_y, n_z].
     """
     # Compute the XY coordinates of the surface
     x_points = np.arange(nx) * dx
@@ -26,17 +44,21 @@ def triangulate_surface(nx, ny, dx, surf_height) -> tuple[np.ndarray, np.ndarray
     xy_triangles = scipy.spatial.Delaunay(surf_xy_indices)
     print("... Complete")
     vertex_indices = xy_triangles.simplices
-    triangles = triangle_coord_lookup(
+    triangles = _triangle_coord_lookup(
         vertex_indices, surf_xy_indices, x_points, y_points, surf_height
     )
-    surf_norm = triangle_normals(triangles)
+    surf_norm = _triangle_normals(triangles)
     return triangles, surf_norm
 
 
-def triangle_coord_lookup(
-    vertex_indices, surf_xy_indices, x_points, y_points, surf_height
-):
-    """Create an array of triangle vertex coordinates"""
+def _triangle_coord_lookup(
+    vertex_indices: np.ndarray,
+    surf_xy_indices: np.ndarray,
+    x_points: np.ndarray,
+    y_points: np.ndarray,
+    surf_height: np.ndarray,
+) -> np.ndarray:
+    """Create an array of triangle vertex coordinates from indices"""
     n_triangles = vertex_indices.shape[0]
     triangles = np.zeros((n_triangles, 3, 3))
 
@@ -55,7 +77,7 @@ def triangle_coord_lookup(
     return triangles
 
 
-def triangle_normals(triangles):
+def _triangle_normals(triangles: np.ndarray) -> np.ndarray:
     """Compute a normal unit vector to each triangle."""
     n_triangles = triangles.shape[0]
     normals = np.zeros((n_triangles, 3))
