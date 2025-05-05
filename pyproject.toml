@@ -8,4 +8,4 @@ description = "Generate STL files of Gaussian rough surfaces for importing into 
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 authors = [{ name = "Wyatt Gronnemose" }]
-dependencies = ["scipy", "matplotlib", "numpy", "numba", "tqdm"]
+dependencies = ["scipy", "matplotlib", "numpy", "tqdm"]

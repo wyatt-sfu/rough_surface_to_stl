@@ -1,6 +1,5 @@
 import numpy as np
 import scipy.spatial
-import numba
 
 
 def triangulate_surface(nx, ny, dx, surf_height) -> tuple[np.ndarray, np.ndarray]:
@@ -31,7 +30,6 @@ def triangulate_surface(nx, ny, dx, surf_height) -> tuple[np.ndarray, np.ndarray
     return triangles, surf_norm
 
 
-@numba.njit
 def triangle_coord_lookup(
     vertex_indices, surf_xy_indices, x_points, y_points, surf_height
 ):
@@ -54,7 +52,6 @@ def triangle_coord_lookup(
     return triangles
 
 
-@numba.njit
 def triangle_normals(triangles):
     """Compute a normal unit vector to each triangle."""
     return np.zeros((triangles.shape[0], 3))  # TODO: Actually compute this
